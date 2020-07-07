@@ -38,7 +38,7 @@ class TopicModel(hub.Module):
         This interface infers the topic distribution of document.
         
         Args:
-            document(string): the input document text.
+            document(str): the input document text.
 
         Returns: 
             results(list): returns the topic distribution of document.

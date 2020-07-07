@@ -39,8 +39,8 @@ class TopicModel(hub.Module):
         This interface calculates the distance between documents.
         
         Args:
-            doc_text1(string): the input document text 1.
-            doc_text2(string): the input document text 2.
+            doc_text1(str): the input document text 1.
+            doc_text2(str): the input document text 2.
         
         Returns:
             jsd(float): Jensen-Shannon Divergence distance of two documents.
@@ -70,7 +70,7 @@ class TopicModel(hub.Module):
         This interface can be used to find top k keywords of document.
         
         Args:
-            document(string): the input document text.
+            document(str): the input document text.
             top_k(int): top k keywords of this document.
 
         Returns:
@@ -117,8 +117,8 @@ class TopicModel(hub.Module):
         This interface calculates the similarity between query and document.
         
         Args:
-            query(string): the input query text.
-            document(string): the input document text.
+            query(str): the input query text.
+            document(str): the input document text.
 
         Returns:
             lda_sim(float): likelihood based similarity between query and document
@@ -143,7 +143,7 @@ class TopicModel(hub.Module):
         This interface infers the topic distribution of document.
         
         Args:
-            document(string): the input document text.
+            document(str): the input document text.
 
         Returns: 
             results(list): returns the topic distribution of document.

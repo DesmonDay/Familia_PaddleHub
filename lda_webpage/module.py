@@ -17,8 +17,8 @@ from lda_webpage.vocab import Vocab, WordCount
 @moduleinfo(
     name="lda_webpage",
     version="1.0.0",
-    summary="This is a PaddleHub Module for LDA model in webpage dataset.",
-    author="",
+    summary="This is a PaddleHub Module for LDA topic model in webpage dataset, where we can calculate doc distance, calculate the similarity between query and document, etc.",
+    author="baidu",
     author_email="",
     type="nlp/topic_model")
 class TopicModel(hub.Module):

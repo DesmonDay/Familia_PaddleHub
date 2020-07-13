@@ -17,8 +17,8 @@ from slda_novel.vocab import Vocab, WordCount
 @moduleinfo(
     name="slda_news",
     version="1.0.0",
-    summary="This is a PaddleHub Module for SLDA model in novel dataset.",
-    author="",
+    summary="This is a PaddleHub Module for SLDA topic model in novel dataset, where we can infer the topic distribution of document.",
+    author="baidu",
     author_email="",
     type="nlp/topic_model")
 class TopicModel(hub.Module):

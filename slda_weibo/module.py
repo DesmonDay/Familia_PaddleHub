@@ -17,8 +17,8 @@ from slda_weibo.vocab import Vocab, WordCount
 @moduleinfo(
     name="slda_weibo",
     version="1.0.0",
-    summary="This is a PaddleHub Module for SLDA model in weibo dataset.",
-    author="",
+    summary="This is a PaddleHub Module for SLDA topic model in weibo dataset, where we can infer the topic distribution of document.",
+    author="baidu",
     author_email="",
     type="nlp/topic_model")
 class TopicModel(hub.Module):

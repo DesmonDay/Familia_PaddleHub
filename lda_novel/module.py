@@ -20,7 +20,7 @@ from lda_novel.vocab import Vocab, WordCount
     summary="This is a PaddleHub Module for LDA topic model in novel dataset, where we can calculate doc distance, calculate the similarity between query and document, etc.",
     author="baidu",
     author_email="",
-    type="nlp/topic_model")
+    type="nlp/semantic_model")
 class TopicModel(hub.Module):
     def _initialize(self):
         """
@@ -33,6 +33,16 @@ class TopicModel(hub.Module):
         lac = hub.Module(name="lac")
         # self.__tokenizer = SimpleTokenizer(self.vocab_path)
         self.__tokenizer = LACTokenizer(self.vocab_path, lac)
+
+        self.vocabulary = self.__engine.get_model().get_vocab()
+        self.config = self.__engine.get_config()
+        self.topic_words = self.__engine.get_model().topic_words()
+        self.topic_sum_table = self.__engine.get_model().topic_sum()
+
+        def take_elem(word_count):
+                return word_count.count
+        for i in range(self.config.num_topics):
+            self.topic_words[i].sort(key=take_elem, reverse=True)
 
     def cal_doc_distance(self, doc_text1, doc_text2):
         """
@@ -172,21 +182,13 @@ class TopicModel(hub.Module):
                            probability.
         """
         EPS = 1e-8
-        vocabulary = self.__engine.get_model().get_vocab()
-        config = self.__engine.get_config()
-        topic_words = self.__engine.get_model().topic_words()
-        topic_sum_table = self.__engine.get_model().topic_sum()
-        for i in range(config.num_topics):
-            def take_elem(word_count):
-                return word_count.count
-            topic_words[i].sort(key=take_elem, reverse=True)
         results = {}
-        if 0 <= topic_id < config.num_topics:
-            k = min(k, len(topic_words[topic_id]))
+        if 0 <= topic_id < self.config.num_topics:
+            k = min(k, len(self.topic_words[topic_id]))
             for i in range(k):
-                prob = topic_words[topic_id][i].count / \
-                       (topic_sum_table[topic_id] + EPS)
-                results[vocabulary[topic_words[topic_id][i].word_id]] = prob
+                prob = self.topic_words[topic_id][i].count / \
+                       (self.topic_sum_table[topic_id] + EPS)
+                results[self.vocabulary[self.topic_words[topic_id][i].word_id]] = prob
             return results
         else:
             logger.error("%d is out of range!" % topic_id)

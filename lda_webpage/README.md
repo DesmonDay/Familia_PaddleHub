@@ -1,6 +1,6 @@
 ## 模型概述
 
-本Module基于的数据集为百度自建的新闻领域数据集。主题模型(Topic Model)是以无监督学习的方式对文档的隐含语义结构进行聚类的统计模型，其中LDA(Latent Dirichlet Allocation)算法是主题模型的一种。LDA根据对词的共现信息的分析，拟合出词-文档-主题的分布，从而将词、文本映射到一个语义空间中。
+本Module基于的数据集为百度自建的网页领域数据集。主题模型(Topic Model)是以无监督学习的方式对文档的隐含语义结构进行聚类的统计模型，其中LDA(Latent Dirichlet Allocation)算法是主题模型的一种。LDA根据对词的共现信息的分析，拟合出词-文档-主题的分布，从而将词、文本映射到一个语义空间中。
 
 更多详情请参考[LDA论文](http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf)。
 
@@ -77,24 +77,19 @@
 ``` python
 import paddlehub as hub
 
-lda_news = hub.Module(name="lda_news")
-jsd, hd = lda_news.cal_doc_distance(doc_text1="今天的天气如何，适合出去游玩吗", doc_text2="感觉今天的天气不错，可以出去玩一玩了")
-# jsd = 0.003109, hd = 0.0573171
+lda_news = hub.Module(name="lda_webpage")
+jsd, hd = lda_news.cal_doc_distance(doc_text1="百度的网页上有着各种新闻的推荐，内容丰富多彩。", doc_text2="百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。")
+# jsd = 0.00249, hd = 0.0510
 
-lda_sim = lda_news.cal_query_doc_similarity(query='百度搜索引擎', document='百度是全球最大的中文搜索引擎、致力于让网民更便捷地获取信息，找到所求。百度超过千亿的中文网页数据库，可以瞬间找到相关的搜索结果。')
-# LDA similarity = 0.06826
-
-results = lda_news.cal_doc_keywords_similarity('百度是全球最大的中文搜索引擎、致力于让网民更便捷地获取信息，找到所求。百度超过千亿的中文网页数据库，可以瞬间找到相关的搜索结果。')
-# [{'word': '百度', 'similarity': 0.12943492762349573}, 
-#  {'word': '信息', 'similarity': 0.06139783578769882}, 
-#  {'word': '找到', 'similarity': 0.055296603463188265}, 
-#  {'word': '搜索', 'similarity': 0.04270794098349327}, 
-#  {'word': '全球', 'similarity': 0.03773627056367886}, 
-#  {'word': '超过', 'similarity': 0.03478658388202199}, 
-#  {'word': '相关', 'similarity': 0.026295857219683725}, 
-#  {'word': '获取', 'similarity': 0.021313585287833996}, 
-#  {'word': '中文', 'similarity': 0.020187103312009513}, 
-#  {'word': '搜索引擎', 'similarity': 0.007092890537169911}]
+results = lda_news.cal_doc_keywords_similarity('百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。')
+#  [{'word': '强大', 'similarity': 0.0838851256627093}, 
+#   {'word': '推荐', 'similarity': 0.06295345182499558}, 
+#   {'word': '新闻', 'similarity': 0.05894049247832139}, 
+#   {'word': '提供', 'similarity': 0.04179908620523299}, 
+#   {'word': '百度', 'similarity': 0.033778847361833536}, 
+#   {'word': '首页', 'similarity': 0.018429949496365026}, 
+#   {'word': '功能', 'similarity': 0.011409342579361237}, 
+#   {'word': '搜索引擎', 'similarity': 0.010392479335778413}]
 
 ```
 

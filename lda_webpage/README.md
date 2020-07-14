@@ -77,11 +77,11 @@
 ``` python
 import paddlehub as hub
 
-lda_news = hub.Module(name="lda_webpage")
-jsd, hd = lda_news.cal_doc_distance(doc_text1="百度的网页上有着各种新闻的推荐，内容丰富多彩。", doc_text2="百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。")
+lda_webpage = hub.Module(name="lda_webpage")
+jsd, hd = lda_webpage.cal_doc_distance(doc_text1="百度的网页上有着各种新闻的推荐，内容丰富多彩。", doc_text2="百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。")
 # jsd = 0.00249, hd = 0.0510
 
-results = lda_news.cal_doc_keywords_similarity('百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。')
+results = lda_webpage.cal_doc_keywords_similarity('百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。')
 #  [{'word': '强大', 'similarity': 0.0838851256627093}, 
 #   {'word': '推荐', 'similarity': 0.06295345182499558}, 
 #   {'word': '新闻', 'similarity': 0.05894049247832139}, 

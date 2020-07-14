@@ -44,6 +44,8 @@ class TopicModel(hub.Module):
         for i in range(self.config.num_topics):
             self.topic_words[i].sort(key=take_elem, reverse=True)
 
+        logger.info("Finish Initialization.")
+
     def infer_doc_topic_distribution(self, document):
         """
         This interface infers the topic distribution of document.

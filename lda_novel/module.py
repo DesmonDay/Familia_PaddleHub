@@ -43,6 +43,8 @@ class TopicModel(hub.Module):
                 return word_count.count
         for i in range(self.config.num_topics):
             self.topic_words[i].sort(key=take_elem, reverse=True)
+        
+        logger.info("Finish initialization.")
 
     def cal_doc_distance(self, doc_text1, doc_text2):
         """

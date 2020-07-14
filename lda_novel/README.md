@@ -77,11 +77,11 @@
 ``` python
 import paddlehub as hub
 
-lda_news = hub.Module(name="lda_novel")
-jsd, hd = lda_news.cal_doc_distance(doc_text1="老人幸福地看着自己的儿子，露出了欣慰的笑容。", doc_text2="老奶奶看着自己的儿子，幸福地笑了。")
+lda_novel = hub.Module(name="lda_novel")
+jsd, hd = lda_novel.cal_doc_distance(doc_text1="老人幸福地看着自己的儿子，露出了欣慰的笑容。", doc_text2="老奶奶看着自己的儿子，幸福地笑了。")
 # jsd = 0.01292, hd = 0.11893
 
-lda_sim = lda_news.cal_query_doc_similarity(query='亲孙女', document='老人激动地打量着面前的女孩，似乎找到了自己的亲孙女一般，双手止不住地颤抖着。')
+lda_sim = lda_novel.cal_query_doc_similarity(query='亲孙女', document='老人激动地打量着面前的女孩，似乎找到了自己的亲孙女一般，双手止不住地颤抖着。')
 # LDA similarity = 0.0
 
 ```

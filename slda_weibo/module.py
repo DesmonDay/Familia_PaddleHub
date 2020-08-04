@@ -46,6 +46,37 @@ class TopicModel(hub.Module):
 
         logger.info("Finish initialization.")
 
+    def cal_doc_distance(self, doc_text1, doc_text2):
+        """
+        This interface calculates the distance between documents.
+
+        Args:
+            doc_text1(str): the input document text 1.
+            doc_text2(str): the input document text 2.
+
+        Returns:
+            jsd(float): Jensen-Shannon Divergence distance of two documents.
+            hd(float): Hellinger Distance of two documents.
+        """
+        doc1_tokens = self.__tokenizer.tokenize(doc_text1)
+        doc2_tokens = self.__tokenizer.tokenize(doc_text2)
+
+        # Document topic inference.
+        doc1, doc2 = SLDADoc(), SLDADoc()
+        self.__engine.infer(doc1_tokens, doc1)
+        self.__engine.infer(doc2_tokens, doc2)
+
+        # To calculate jsd, we need dense document topic distribution.
+        dense_dict1 = doc1.dense_topic_dist()
+        dense_dict2 = doc2.dense_topic_dist()
+        # Calculate the distance between distributions.
+        # The smaller the distance, the higher the document semantic similarity.
+        sm = SemanticMatching()
+        jsd = sm.jensen_shannon_divergence(dense_dict1, dense_dict2)
+        hd = sm.hellinger_distance(dense_dict1, dense_dict2)
+
+        return jsd, hd
+
     def infer_doc_topic_distribution(self, document):
         """
         This interface infers the topic distribution of document.

@@ -15,10 +15,10 @@
 如果你仍然要使用，下面给出具体步骤。
 
 1. 下载对应的模型文件后解压到对应的文件夹，这里对应的模型文件可以到此处下载：
-- slda_news(不建议使用): https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_news.tar.gz
+- slda_news: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_news.tar.gz
 - slda_weibo: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_weibo.tar.gz
 - slda_novel: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_novel.tar.gz
-- slda_webpage(不建议使用): https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_webpage.tar.gz
+- slda_webpage: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_webpage.tar.gz
 
 2. 在python中使用，以slda_weibo为例(相当于使用本地下载好的模型文件)
 

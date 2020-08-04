@@ -25,6 +25,7 @@
 ``` python
 import paddlehub as hub
 model = hub.Module(directory="slda_weibo")
+jsd, hd = model.cal_doc_distance("微博是人们发表言论的地方，我们需要这样的自由天地", "我们需要自由!")
 topic_dist = model.infer_doc_topic_distribution("微博是人们发表言论的地方，我们需要这样的自由天地")
 keywords = model.show_topic_keywords(topic_id=10, k=10)
 ```

@@ -71,27 +71,6 @@
 
 - results(dict): 返回对应文档的前k个关键词，以及各个关键词在文档中的出现概率。
 
-### 代码示例
-
-这里展示部分API的使用示例。
-``` python
-import paddlehub as hub
-
-lda_webpage = hub.Module(name="lda_webpage")
-jsd, hd = lda_webpage.cal_doc_distance(doc_text1="百度的网页上有着各种新闻的推荐，内容丰富多彩。", doc_text2="百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。")
-# jsd = 0.00249, hd = 0.0510
-
-results = lda_webpage.cal_doc_keywords_similarity('百度首页推荐着各种新闻，还提供了强大的搜索引擎功能。')
-#  [{'word': '强大', 'similarity': 0.0838851256627093}, 
-#   {'word': '推荐', 'similarity': 0.06295345182499558}, 
-#   {'word': '新闻', 'similarity': 0.05894049247832139}, 
-#   {'word': '提供', 'similarity': 0.04179908620523299}, 
-#   {'word': '百度', 'similarity': 0.033778847361833536}, 
-#   {'word': '首页', 'similarity': 0.018429949496365026}, 
-#   {'word': '功能', 'similarity': 0.011409342579361237}, 
-#   {'word': '搜索引擎', 'similarity': 0.010392479335778413}]
-
-```
 
 ## 查看代码
 https://github.com/baidu/Familia

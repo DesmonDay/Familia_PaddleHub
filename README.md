@@ -1,64 +1,36 @@
-# LDA模型 API 说明 
-## cal_doc_distance(doc_text1, doc_text2)
-用于计算两个输入文档之间的距离，包括Jensen-Shannon divergence(JS散度)、Hellinger Distance(海林格距离)。
+# 如何使用
 
-**参数**
+## 如何使用LDA模型
 
-- doc_text1(str): 输入的第一个文档。
-- doc_text2(str): 输入的第二个文档。
+对于LDA模型，你可以直接使用PaddleHub 1.8版本已集成好的模型，具体可以访问：https://www.paddlepaddle.org.cn/hublist?filter=en_category&value=SemanticModel 
 
-**返回**
+网页中包含了详细的使用文档，可自行查看。
 
-- jsd(float): 两个文档之间的JS散度。
-- hd(float): 两个文档之间的海林格距离。
+## 如何使用SLDA模型
 
-## cal_doc_keywords_similarity(document, top_k=10)
+对于SLDA模型，由于目前python版本占用内存较大，使用起来会耗比较多的系统资源，因此未集成到官方的PaddleHub中。后续会进行一定的改进。
 
-用于查找输入文档的前k个关键词。
+对于slda_novel和slda_weibo，这两个模型占用资源情况比较正常；但对于slda_webpage和slda_news这两个模型，由于模型比较大，所以占用的内存也比较大，有可能会让电脑比较卡。
 
-**参数**
+如果你仍然要使用，下面给出具体步骤。
 
-- document(str): 输入文档。
-- top_k(int): 查找输入文档的前k个关键词。
+1. 下载对应的模型文件后解压到对应的文件夹，这里对应的模型文件可以到此处下载：
+- slda_news(不建议使用): https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_news.tar.gz
+- slda_weibo: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_weibo.tar.gz
+- slda_novel: https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_novel.tar.gz
+- slda_webpage(不建议使用): https://bj.bcebos.com/paddlehub/model/nlp/semantic_model/slda_webpage.tar.gz
 
-**返回**
+2. 在python中使用，以slda_weibo为例(相当于使用本地下载好的模型文件)
 
-- results(list): 包含每个关键词以及对应的与原文档的相似度。
+``` python
+import paddlehub as hub
+model = hub.Module(directory="slda_news")
+topic_dist = model.infer_doc_topic_distribution("微博是人们发表言论的地方，我们需要这样的自由天地")
+keywords = model.show_topic_keywords(topic_id=10, k=10)
+```
 
-## cal_query_doc_similarity(query, document)
+## 与C++版本Familia的区别
 
-用于计算短文档与长文档之间的相似度。
+之所以要集成到PaddleHub中，主要原因是编译C++版本的Familia，许多同学会遇到各种环境依赖导致的问题，所以就提供一个python版本的Familia。（比如我，尽管编译C++版本的Familia没有问题，但是尝试使用其生成的familia.so却无法正常使用，也是因为缺少了相关依赖的关系）
 
-**参数**
-
-- query(str): 输入的短文档。
-- document(str): 输入的长文档。
-
-**返回**
-
-- lda_sim(float): 返回短文档与长文档之间的相似度。
-
-## infer_doc_topic_distribution(document)
-
-用于推理出文档的主题分布。
-
-**参数**
-
-- document(str): 输入文档。
-
-**返回**
-
-- results(list): 包含主题分布下各个主题ID和对应的概率分布。
-
-## show_topic_keywords(topic_id, k=10)
-
-用于展示出每个主题下对应的关键词，可配合推理主题分布的API使用。
-
-**参数**
-
-- topic_id(int): 主题ID。
-- k(int): 需要知道对应主题的前k个关键词。
-
-**返回**
-
-- results(dict): 返回对应文档的前k个关键词，以及各个关键词在文档中的出现概率。
+python版本与C++版本的主要区别，一个是由于python本身固有的比较慢的文件读取速度，另一个是内存消耗也比C++大。然后在计算结果对比方面，在使用相同的分词器的情况下，在固定随机输入为相同的前提下，两种版本的结果输出一致；因此两者主要的差异是由于random seed导致的。另一方面，我在python版本中使用的分词器为PaddleHub中的LAC分词器，分词效果更加准确，但这也导致了C++版本Familia的一点差异（如果你仍然要使用C++版本中使用的分词器，可以修改module.py中的self.\_\_tokenizer）。

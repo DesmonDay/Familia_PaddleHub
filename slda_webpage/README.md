@@ -33,25 +33,6 @@
 
 - results(dict): 返回对应文档的前k个关键词，以及各个关键词在文档中的出现概率。
 
-### 代码示例
-
-这里展示API的使用示例。
-
-``` python
-import paddlehub as hub
-
-slda_webpage = hub.Module(name="slda_webpage")
-
-topic_dist = slda_webpage.infer_doc_topic_distribution("百度是全球最大的中文搜索引擎、致力于让网民更便捷地获取信息，找到所求。")
-# [{'topic id': 4687, 'distribution': 0.38333333333333336}, 
-#  {'topic id': 2508, 'distribution': 0.31666666666666665}, 
-#  {'topic id': 2871, 'distribution': 0.15}, 
-#  {'topic id': 2292, 'distribution': 0.11666666666666667}, 
-#  {'topic id': 4410, 'distribution': 0.016666666666666666}, 
-#  {'topic id': 4676, 'distribution': 0.016666666666666666}]
-
-
-```
 
 ## 查看代码
 https://github.com/baidu/Familia

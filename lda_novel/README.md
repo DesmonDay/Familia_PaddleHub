@@ -71,20 +71,6 @@
 
 - results(dict): 返回对应文档的前k个关键词，以及各个关键词在文档中的出现概率。
 
-### 代码示例
-
-这里展示部分API的使用示例。
-``` python
-import paddlehub as hub
-
-lda_novel = hub.Module(name="lda_novel")
-jsd, hd = lda_novel.cal_doc_distance(doc_text1="老人幸福地看着自己的儿子，露出了欣慰的笑容。", doc_text2="老奶奶看着自己的儿子，幸福地笑了。")
-# jsd = 0.01292, hd = 0.11893
-
-lda_sim = lda_novel.cal_query_doc_similarity(query='亲孙女', document='老人激动地打量着面前的女孩，似乎找到了自己的亲孙女一般，双手止不住地颤抖着。')
-# LDA similarity = 0.0
-
-```
 
 ## 查看代码
 https://github.com/baidu/Familia

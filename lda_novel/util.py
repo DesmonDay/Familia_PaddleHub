@@ -4,7 +4,7 @@ import yaml
 
 from paddlehub.common.logger import logger
 
-from lda_news.config import ModelType
+from lda_novel.config import ModelType
 
 
 def load_prototxt(config_file, config):

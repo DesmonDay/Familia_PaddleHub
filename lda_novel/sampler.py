@@ -4,9 +4,9 @@ from tqdm import tqdm
 
 from paddlehub.common.logger import logger
 
-from lda_news.document import LDADoc, SLDADoc, Token, Sentence
-from lda_news.vose_alias import VoseAlias
-from lda_news.util import rand, rand_k
+from lda_novel.document import LDADoc, SLDADoc, Token, Sentence
+from lda_novel.vose_alias import VoseAlias
+from lda_novel.util import rand, rand_k
 
 
 class Sampler(object):

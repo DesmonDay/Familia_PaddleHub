@@ -30,6 +30,10 @@ topic_dist = model.infer_doc_topic_distribution("微博是人们发表言论的�
 keywords = model.show_topic_keywords(topic_id=10, k=10)
 ```
 
+对于SLDA模型中，在C++版本的Familia中，只提供了两个api使用：infer_doc_topic_distribution、show_topic_keywords，因此一开始SLDA模型也只提供了两个API. 由于有同学说希望可以提供其他三个APIs，因此也进行了补充。在和C++版本对齐的时候，对C++版本的代码进行一定的修改，目前可以对齐cal_query_doc_similarity和cal_doc_keywords_similarity这两个API。但对于cal_doc_distance，由于C++版本的改起来会比较麻烦，因此就没有进行结果验证。
+
+如果有同学发现代码问题，欢迎直接提PR来修正。
+
 ## 与C++版本Familia的区别
 
 之所以要集成到PaddleHub中，主要原因是编译C++版本的Familia，许多同学会遇到各种环境依赖导致的问题，所以就提供一个python版本的Familia。（比如我，尽管编译C++版本的Familia没有问题，但是尝试使用其生成的familia.so却无法正常使用，也是因为缺少了相关依赖的关系）

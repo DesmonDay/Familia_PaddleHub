@@ -44,37 +44,6 @@ class TopicModel(hub.Module):
             self.topic_words[i].sort(key=take_elem, reverse=True)
 
         logger.info("Finish Initialization.")
- 
-    def cal_doc_distance(self, doc_text1, doc_text2):
-        """
-        This interface calculates the distance between documents.
-        
-        Args:
-            doc_text1(str): the input document text 1.
-            doc_text2(str): the input document text 2.
-        
-        Returns:
-            jsd(float): Jensen-Shannon Divergence distance of two documents.
-            hd(float): Hellinger Distance of two documents.
-        """
-        doc1_tokens = self.__tokenizer.tokenize(doc_text1)
-        doc2_tokens = self.__tokenizer.tokenize(doc_text2)
-
-        # Document topic inference.
-        doc1, doc2 = SLDADoc(), SLDADoc()
-        self.__engine.infer(doc1_tokens, doc1)
-        self.__engine.infer(doc2_tokens, doc2)
-
-        # To calculate jsd, we need dense document topic distribution.
-        dense_dict1 = doc1.dense_topic_dist()
-        dense_dict2 = doc2.dense_topic_dist()
-        # Calculate the distance between distributions.
-        # The smaller the distance, the higher the document semantic similarity.
-        sm = SemanticMatching()
-        jsd = sm.jensen_shannon_divergence(dense_dict1, dense_dict2)
-        hd = sm.hellinger_distance(dense_dict1, dense_dict2)
-
-        return jsd, hd
 
     def infer_doc_topic_distribution(self, document):
         """
@@ -129,3 +98,139 @@ class TopicModel(hub.Module):
             return results
         else:
             logger.error("%d is out of range!" % topic_id)
+
+    def cal_doc_keywords_similarity(self, document, top_k=10):
+        """
+        This interface can be used to find topk keywords of document.
+        
+        Args:
+            document(str): the input document text.
+            top_k(int): top k keywords of this document.
+
+        Returns:
+            results(list): contains top_k keywords and their corresponding 
+                           similarity compared to document.
+        """
+        tokens = self.__tokenizer.tokenize(document)
+        sentences = []
+        sent = []
+        for i in range(len(tokens)):
+            sent.append(tokens[i])
+            if len(sent) % 5 == 0:
+                sentences.append(sent)
+                sent = []
+        if len(sent) > 0:
+            sentences.append(sent)
+        # Do topic inference on documents to obtain topic distribution.
+        doc = SLDADoc()
+        self.__engine.infer(sentences, doc)
+        doc_topic_dist = doc.sparse_topic_dist()
+        items = []
+        words = set()
+        for word in tokens:
+            if word in words:
+                continue
+            words.add(word)
+            wd = WordAndDis()
+            wd.word = word
+            sm = SemanticMatching()
+            wd.distance = sm.likelihood_based_similarity(terms=[word],
+                                                         doc_topic_dist=doc_topic_dist,
+                                                         model=self.__engine.get_model())
+            items.append(wd)
+        
+        def take_elem(word_dis):
+            return word_dis.distance
+
+        items.sort(key=take_elem, reverse=True)
+
+        results = []
+        size = len(items)
+        for i in range(top_k):
+            if i >= size:
+                break
+            results.append({"word": items[i].word, "similarity": items[i].distance})
+        return results
+
+    def cal_doc_distance(self, doc_text1, doc_text2):
+        """
+        This interface calculates the distance between documents.
+        
+        Args:
+            doc_text1(str): the input document text 1.
+            doc_text2(str): the input document text 2.
+        
+        Returns:
+            jsd(float): Jensen-Shannon Divergence distance of two documents.
+            hd(float): Hellinger Distance of two documents.
+        """
+        doc1_tokens = self.__tokenizer.tokenize(doc_text1)
+        doc2_tokens = self.__tokenizer.tokenize(doc_text2)
+
+        doc1_sents, doc2_sents = [], []
+        sent1 = []
+        for i in range(len(doc1_tokens)):
+            sent1.append(doc1_tokens[i])
+            if len(sent1) % 5 == 0:
+                doc1_sents.append(sent1)
+                sent1 = []
+        if len(sent1) > 0:
+            doc1_sents.append(sent1)
+
+        sent2 = []
+        for i in range(len(doc2_tokens)):
+            sent2.append(doc2_tokens[i])
+            if len(sent2) % 5 == 0:
+                doc2_sents.append(sent2)
+                sent2 = []
+        if len(sent2) > 0:
+            doc2_sents.append(sent2)
+        
+        # Document topic inference.
+        doc1, doc2 = SLDADoc(), SLDADoc()
+        self.__engine.infer(doc1_sents, doc1)
+        self.__engine.infer(doc2_sents, doc2)
+
+        # To calculate jsd, we need dense document topic distribution.
+        dense_dict1 = doc1.dense_topic_dist()
+        dense_dict2 = doc2.dense_topic_dist()
+        # Calculate the distance between distributions.
+        # The smaller the distance, the higher the document semantic similarity.
+        sm = SemanticMatching()
+        jsd = sm.jensen_shannon_divergence(dense_dict1, dense_dict2)
+        hd = sm.hellinger_distance(dense_dict1, dense_dict2)
+
+        return jsd, hd
+
+    def cal_query_doc_similarity(self, query, document):
+        """
+        This interface calculates the similarity between query and document.
+        
+        Args:
+            query(str): the input query text.
+            document(str): the input document text.
+
+        Returns:
+            slda_sim(float): likelihood based similarity between query and document 
+                            based on SLDA.
+        """
+        q_tokens = self.__tokenizer.tokenize(query)
+        d_tokens = self.__tokenizer.tokenize(document)
+        sentences = []
+        sent = []
+        for i in range(len(d_tokens)):
+            sent.append(d_tokens[i])
+            if len(sent) % 5 == 0:
+                sentences.append(sent)
+                sent = []
+        if len(sent) > 0:
+            sentences.append(sent)
+
+        doc = SLDADoc()
+        self.__engine.infer(sentences, doc)
+        doc_topic_dist = doc.sparse_topic_dist()
+        sm = SemanticMatching()
+        slda_sim = sm.likelihood_based_similarity(q_tokens,
+                                                  doc_topic_dist,
+                                                  self.__engine.get_model())
+        return slda_sim
